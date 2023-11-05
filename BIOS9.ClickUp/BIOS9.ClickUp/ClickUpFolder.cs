@@ -27,7 +27,7 @@ public class ClickUpFolder
     
     // lists
     
-    public ClickUpClient? ClickUpClient { get; set; }
+    internal ClickUpClient? ClickUpClient { get; set; }
     
     public async Task<IList<ClickUpList>> GetListsAsync(bool archived = false)
     {

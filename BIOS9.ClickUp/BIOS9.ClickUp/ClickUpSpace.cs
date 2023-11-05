@@ -19,7 +19,7 @@ public class ClickUpSpace
     
     // features
     
-    public ClickUpClient? ClickUpClient { get; set; }
+    internal ClickUpClient? ClickUpClient { get; set; }
     
     public async Task<IList<ClickUpFolder>> GetFoldersAsync(bool archived = false)
     {

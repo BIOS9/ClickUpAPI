@@ -20,7 +20,7 @@ public class ClickUpTeam
     
     //public required string? Members { get; init; }
     
-    public ClickUpClient? ClickUpClient { get; set; }
+    internal ClickUpClient? ClickUpClient { get; set; }
 
     public async Task<IList<ClickUpSpace>> GetSpacesAsync(bool archived = false)
     {

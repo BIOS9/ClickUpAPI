@@ -40,5 +40,5 @@ public class ClickUpList
     
     // permission_level
     
-    public ClickUpClient? ClickUpClient { get; set; }
+    internal ClickUpClient? ClickUpClient { get; set; }
 }
