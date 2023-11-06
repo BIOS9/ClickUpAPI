@@ -1,7 +1,7 @@
 ﻿using RestSharp;
 using RestSharp.Authenticators;
 
-namespace BIOS9.ClickUp;
+namespace BIOS9.ClickUp.Rest.V2;
 
 public class PersonalApiAuthenticator : IAuthenticator
 {
