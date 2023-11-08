@@ -32,7 +32,7 @@ public class ClickUpFolder : RestEntity, IFolder
     {
         var properties = new FolderProperties();
         propertiesFunc(properties);
-        var body = new Models.Common.Space(
+        var body = new Models.Common.Folder(
             Id,
             properties.Name.OrElse(Name));
         var request = new RestRequest($"folder/{Id}");
