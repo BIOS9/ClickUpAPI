@@ -18,6 +18,16 @@ public class ClickUpSpace : RestEntity, ISpace
         Update(model);
     }
 
+    public async Task DeleteAsync()
+    {
+        var request = new RestRequest($"space/{Id}");
+        var response = await ClickUp.GetRestClient().DeleteAsync(request);
+        if (!response.IsSuccessful)
+        {
+            throw new Exception("Failed to delete space");
+        }
+    }
+
     public async Task<IReadOnlyCollection<IFolder>> GetFoldersAsync(bool archived = false)
     {
         var request = new RestRequest($"space/{Id}/folder");
