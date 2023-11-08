@@ -5,6 +5,7 @@ namespace BIOS9.ClickUp.Rest.V2.Entities;
 public abstract class RestEntity : IEntity
 {
     public string Id { get; }
+    public abstract Task UpdateAsync();
     internal ClickUpClient ClickUp { get; }
 
     protected RestEntity(string id, ClickUpClient clickUp)

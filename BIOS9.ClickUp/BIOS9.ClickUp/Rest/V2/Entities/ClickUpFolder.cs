@@ -57,6 +57,17 @@ public class ClickUpFolder : RestEntity, IFolder
         return response.Lists.Select(s => new ClickUpList(s, ClickUp)).ToImmutableList();
     }
 
+    public override async Task UpdateAsync()
+    {
+        var request = new RestRequest($"folder/{Id}");
+        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.Folder>(request);
+        if (response == null)
+        {
+            throw new NullReferenceException("Invalid response from server");
+        }
+        Update(response);
+    }
+    
     internal ClickUpFolder Update(Models.Common.Folder model)
     {
         Name = model.Name;

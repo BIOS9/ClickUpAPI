@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using BIOS9.ClickUp.Core.Entities;
 using BIOS9.ClickUp.Rest.V2.Models;
-using BIOS9.ClickUp.Rest.V2.Models.Common;
 using RestSharp;
 
 namespace BIOS9.ClickUp.Rest.V2.Entities;
@@ -12,7 +11,7 @@ public class ClickUpTeam : RestEntity, ITeam
 
     public ClickUpTeam(string id, ClickUpClient clickUp) : base(id, clickUp) { }
     
-    public ClickUpTeam(Team model, ClickUpClient clickUp) : base(model.Id, clickUp)
+    public ClickUpTeam(Models.Common.Team model, ClickUpClient clickUp) : base(model.Id, clickUp)
     {
         Update(model);
     }
@@ -33,7 +32,7 @@ public class ClickUpTeam : RestEntity, ITeam
     {
         var request = new RestRequest($"team/{Id}/space");
         request.AddJsonBody(new CreateSpaceRequest(name));
-        var response = await ClickUp.GetRestClient().PostAsync<Space>(request);
+        var response = await ClickUp.GetRestClient().PostAsync<Models.Common.Space>(request);
         if (response == null)
         {
             throw new NullReferenceException("Invalid response from server");
@@ -41,7 +40,18 @@ public class ClickUpTeam : RestEntity, ITeam
         return new ClickUpSpace(response, ClickUp);
     }
 
-    internal ClickUpTeam Update(Team model)
+    public override async Task UpdateAsync()
+    {
+        var request = new RestRequest($"team/{Id}");
+        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.Team>(request);
+        if (response == null)
+        {
+            throw new NullReferenceException("Invalid response from server");
+        }
+        Update(response);
+    }
+    
+    internal ClickUpTeam Update(Models.Common.Team model)
     {
         Name = model.Name;
         return this;

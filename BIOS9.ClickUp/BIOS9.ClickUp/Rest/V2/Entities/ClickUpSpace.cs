@@ -67,6 +67,17 @@ public class ClickUpSpace : RestEntity, ISpace
         return response.Lists.Select(s => new ClickUpList(s, ClickUp)).ToImmutableList();
     }
     
+    public override async Task UpdateAsync()
+    {
+        var request = new RestRequest($"space/{Id}");
+        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.Space>(request);
+        if (response == null)
+        {
+            throw new NullReferenceException("Invalid response from server");
+        }
+        Update(response);
+    }
+    
     internal ClickUpSpace Update(Models.Common.Space model)
     {
         Name = model.Name;

@@ -45,6 +45,17 @@ public class ClickUpTask : RestEntity, ITask
         Update(response);
     }
     
+    public override async Task UpdateAsync()
+    {
+        var request = new RestRequest($"task/{Id}");
+        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.Task>(request);
+        if (response == null)
+        {
+            throw new NullReferenceException("Invalid response from server");
+        }
+        Update(response);
+    }
+    
     internal ClickUpTask Update(Models.Common.Task model)
     {
         Name = model.Name;

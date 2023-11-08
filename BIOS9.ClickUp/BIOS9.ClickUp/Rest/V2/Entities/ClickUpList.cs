@@ -58,6 +58,17 @@ public class ClickUpList : RestEntity, IList
         return response.Tasks.Select(s => new ClickUpTask(s, ClickUp)).ToImmutableList();
     }
     
+    public override async Task UpdateAsync()
+    {
+        var request = new RestRequest($"list/{Id}");
+        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.List>(request);
+        if (response == null)
+        {
+            throw new NullReferenceException("Invalid response from server");
+        }
+        Update(response);
+    }
+    
     internal ClickUpList Update(Models.Common.List model)
     {
         Name = model.Name;
