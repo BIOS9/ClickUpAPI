@@ -35,11 +35,12 @@ public class ClickUpSpace : RestEntity, ISpace
             properties.Name.OrElse(Name));
         var request = new RestRequest($"space/{Id}");
         request.AddJsonBody(body);
-        var response = await ClickUp.GetRestClient().PutAsync(request);
-        if (!response.IsSuccessful)
+        var response = await ClickUp.GetRestClient().PutAsync<Models.Common.Space>(request);
+        if (response == null)
         {
-            throw new Exception("Failed to modify space");
+            throw new NullReferenceException("Invalid response from server");
         }
+        Update(response);
     }
 
     public async Task<IReadOnlyCollection<IFolder>> GetFoldersAsync(bool archived = false)
