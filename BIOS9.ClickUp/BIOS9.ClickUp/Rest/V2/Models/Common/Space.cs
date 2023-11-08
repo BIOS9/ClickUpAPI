@@ -2,8 +2,7 @@
 
 namespace BIOS9.ClickUp.Rest.V2.Models.Common;
 
-public record SpaceLink(
+public record Space(
     [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("access")] bool Access
+    [property: JsonPropertyName("name")] string Name
 );

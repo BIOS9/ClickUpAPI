@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using BIOS9.ClickUp.Core.Entities;
 using BIOS9.ClickUp.Rest.V2.Models;
+using BIOS9.ClickUp.Rest.V2.Models.Common;
 using RestSharp;
 
 namespace BIOS9.ClickUp.Rest.V2.Entities;
@@ -11,7 +12,7 @@ public class ClickUpTeam : RestEntity, ITeam
 
     public ClickUpTeam(string id, ClickUpClient clickUp) : base(id, clickUp) { }
     
-    public ClickUpTeam(Models.Team model, ClickUpClient clickUp) : base(model.Id, clickUp)
+    public ClickUpTeam(Team model, ClickUpClient clickUp) : base(model.Id, clickUp)
     {
         Update(model);
     }
@@ -28,7 +29,7 @@ public class ClickUpTeam : RestEntity, ITeam
         return response.Spaces.Select(s => new ClickUpSpace(s, ClickUp)).ToImmutableList();
     }
 
-    internal ClickUpTeam Update(Models.Team model)
+    internal ClickUpTeam Update(Team model)
     {
         Name = model.Name;
         return this;

@@ -2,7 +2,7 @@
 
 namespace BIOS9.ClickUp.Rest.V2.Models.Common;
 
-public record List(
+public record Team(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name
 );

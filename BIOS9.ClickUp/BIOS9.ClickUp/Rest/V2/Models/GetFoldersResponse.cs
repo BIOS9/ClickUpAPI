@@ -6,5 +6,3 @@ namespace BIOS9.ClickUp.Rest.V2.Models;
 public record GetFolderResponse(
     [property: JsonPropertyName("folders")] IReadOnlyList<Folder> Folders
 );
-
-

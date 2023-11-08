@@ -13,7 +13,7 @@ public class ClickUpSpace : RestEntity, ISpace
     
     public ClickUpSpace(string id, ClickUpClient clickUp) : base(id, clickUp) { }
     
-    public ClickUpSpace(Models.Space model, ClickUpClient clickUp) : base(model.Id, clickUp)
+    public ClickUpSpace(Models.Common.Space model, ClickUpClient clickUp) : base(model.Id, clickUp)
     {
         Update(model);
     }
@@ -42,7 +42,7 @@ public class ClickUpSpace : RestEntity, ISpace
         return response.Lists.Select(s => new ClickUpList(s, ClickUp)).ToImmutableList();
     }
     
-    internal ClickUpSpace Update(Models.Space model)
+    internal ClickUpSpace Update(Models.Common.Space model)
     {
         Name = model.Name;
         return this;
