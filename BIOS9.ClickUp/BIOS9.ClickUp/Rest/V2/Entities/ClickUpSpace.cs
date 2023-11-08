@@ -1,6 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using BIOS9.ClickUp.Core.Entities;
 using BIOS9.ClickUp.Rest.V2.Models;
 using RestSharp;
@@ -25,6 +23,22 @@ public class ClickUpSpace : RestEntity, ISpace
         if (!response.IsSuccessful)
         {
             throw new Exception("Failed to delete space");
+        }
+    }
+
+    public async Task ModifyAsync(Action<SpaceProperties> propertiesFunc)
+    {
+        var properties = new SpaceProperties();
+        propertiesFunc(properties);
+        var body = new Models.Common.Space(
+            Id,
+            properties.Name.OrElse(Name));
+        var request = new RestRequest($"space/{Id}");
+        request.AddJsonBody(body);
+        var response = await ClickUp.GetRestClient().PutAsync(request);
+        if (!response.IsSuccessful)
+        {
+            throw new Exception("Failed to modify space");
         }
     }
 

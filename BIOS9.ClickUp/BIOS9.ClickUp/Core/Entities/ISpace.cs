@@ -6,6 +6,7 @@ public interface ISpace
     string Name { get; }
 
     Task DeleteAsync();
+    Task ModifyAsync(Action<SpaceProperties> propertiesFunc);
     Task<IReadOnlyCollection<IFolder>> GetFoldersAsync(bool archived = false);
     Task<IReadOnlyCollection<IList>> GetListsAsync(bool archived = false);
 }
