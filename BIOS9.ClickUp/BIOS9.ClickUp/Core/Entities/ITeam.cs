@@ -6,4 +6,5 @@ public interface ITeam
     string Name { get; }
 
     Task<IReadOnlyCollection<ISpace>> GetSpacesAsync(bool archived = false);
+    Task<ISpace> CreateSpaceAsync(string name);
 }

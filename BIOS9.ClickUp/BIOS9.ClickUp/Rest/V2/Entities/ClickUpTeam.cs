@@ -29,6 +29,18 @@ public class ClickUpTeam : RestEntity, ITeam
         return response.Spaces.Select(s => new ClickUpSpace(s, ClickUp)).ToImmutableList();
     }
 
+    public async Task<ISpace> CreateSpaceAsync(string name)
+    {
+        var request = new RestRequest($"team/{Id}/space");
+        request.AddJsonBody(new CreateSpaceRequest(name));
+        var response = await ClickUp.GetRestClient().PostAsync<Space>(request);
+        if (response == null)
+        {
+            throw new NullReferenceException("Invalid response from server");
+        }
+        return new ClickUpSpace(response, ClickUp);
+    }
+
     internal ClickUpTeam Update(Team model)
     {
         Name = model.Name;
