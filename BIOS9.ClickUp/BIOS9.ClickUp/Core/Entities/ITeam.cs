@@ -1,8 +1,7 @@
 ﻿namespace BIOS9.ClickUp.Core.Entities;
 
-public interface ITeam
+public interface ITeam : IEntity
 {
-    string Id { get; }
     string Name { get; }
 
     Task<IReadOnlyCollection<ISpace>> GetSpacesAsync(bool archived = false);

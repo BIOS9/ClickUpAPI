@@ -1,8 +1,7 @@
 ﻿namespace BIOS9.ClickUp.Core.Entities;
 
-public interface ISpace
+public interface ISpace : IEntity
 {
-    string Id { get; }
     string Name { get; }
 
     Task DeleteAsync();

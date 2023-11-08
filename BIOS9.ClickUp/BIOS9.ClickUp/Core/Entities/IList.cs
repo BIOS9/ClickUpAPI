@@ -1,8 +1,7 @@
 ﻿namespace BIOS9.ClickUp.Core.Entities;
 
-public interface IList
+public interface IList : IEntity
 {
-    string Id { get; }
     string Name { get; }
     Task DeleteAsync();
     Task ModifyAsync(Action<ListProperties> propertiesFunc);

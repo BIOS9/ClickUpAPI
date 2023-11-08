@@ -1,8 +1,7 @@
 ﻿namespace BIOS9.ClickUp.Core.Entities;
 
-public interface ITask
+public interface ITask : IEntity
 {
-    string Id { get; }
     string Name { get; }
     string Description { get; }
     Task DeleteAsync();
