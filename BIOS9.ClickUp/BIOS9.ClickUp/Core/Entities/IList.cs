@@ -7,4 +7,5 @@ public interface IList
     Task DeleteAsync();
     Task ModifyAsync(Action<ListProperties> propertiesFunc);
     Task<IReadOnlyCollection<ITask>> GetTasksAsync(bool includeSubtasks = false, bool includeClosed = false, bool archived = false);
+    Task<ITask> CreateTaskAsync(string name);
 }
