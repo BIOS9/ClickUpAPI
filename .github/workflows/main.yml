@@ -21,11 +21,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
       working-directory: ./BIOS9.ClickUp
-
-    - name: Dump GitHub context
-      run: |
-         echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-         echo "Tag name from github.ref_name: ${{  github.ref_name }}"
       
     - name: Build
       run: dotnet build --configuration Release --no-restore
@@ -43,24 +38,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Get Build Version
+      run: |
+        Import-Module ./build/GetBuildVersion.psm1
+        Write-Host $Env:GITHUB_REF
+        $version = GetBuildVersion -VersionString $Env:GITHUB_REF
+        echo "BUILD_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+      shell: pwsh
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3.2.0
       with:
         dotnet-version: '7.0.x'
     
     - name: Create NuGet package
-      run: dotnet pack --configuration Release --output out
-      working-directory: ./BIOS9.ClickUp
-
-    - name: Dump GitHub context
-      run: |
-         ls
-         pwd
-         ls out
-      working-directory: ./BIOS9.ClickUp
+      run: dotnet pack ./BIOS9.ClickUp/BIOS9.ClickUp --configuration Release -p:Version=$BUILD_VERSION --output out
     
     - name: Push NuGet package
-      run: dotnet nuget push out/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
-      working-directory: ./BIOS9.ClickUp
-
-  
+      run: dotnet nuget push ./BIOS9.ClickUp/BIOS9.ClickUp/out/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
