@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using BIOS9.ClickUp.Core.Entities;
+using BIOS9.ClickUp.Core.Util;
 using BIOS9.ClickUp.Rest.V2.Models;
 using RestSharp;
 
@@ -13,19 +12,16 @@ public class ClickUpFolder : RestEntity, IFolder
 
     public ClickUpFolder(string id, ClickUpClient clickUp) : base(id, clickUp) { }
     
-    public ClickUpFolder(Models.Common.Folder model, ClickUpClient clickUp) : base(model.Id, clickUp)
+    public ClickUpFolder(Models.Common.Folder model, ClickUpClient clickUp) : base(model.Id.Value, clickUp)
     {
         Update(model);
     }
 
     public async Task DeleteAsync()
     {
-        var request = new RestRequest($"folder/{Id}");
-        var response = await ClickUp.GetRestClient().DeleteAsync(request);
-        if (!response.IsSuccessful)
-        {
-            throw new Exception("Failed to delete folder");
-        }
+        await ClickUp.RequestAsync(
+            Method.Delete, 
+            $"folder/{Id}");
     }
 
     public async Task ModifyAsync(Action<FolderProperties> propertiesFunc)
@@ -33,44 +29,42 @@ public class ClickUpFolder : RestEntity, IFolder
         var properties = new FolderProperties();
         propertiesFunc(properties);
         var body = new Models.Common.Folder(
-            Id,
-            properties.Name.OrElse(Name));
-        var request = new RestRequest($"folder/{Id}");
-        request.AddJsonBody(body);
-        var response = await ClickUp.GetRestClient().PutAsync<Models.Common.Folder>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+            Optional<string>.Unspecified, 
+            properties.Name);
+        var response = await ClickUp.RequestAsync<Models.Common.Folder>(
+            Method.Put, 
+            $"folder/{Id}",
+            payload: body);
         Update(response);
     }
     
     public async Task<IReadOnlyCollection<IList>> GetListsAsync(bool archived = false)
     {
-        var request = new RestRequest($"folder/{Id}/list");
-        request.AddParameter("archived", archived);
-        var response = await ClickUp.GetRestClient().GetAsync<GetListsResponse>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+        var response = await ClickUp.RequestAsync<GetListsResponse>(
+            Method.Get, 
+            $"folder/{Id}/list", new []
+            {
+                new QueryParameter("archived", archived.ToString())
+            });
         return response.Lists.Select(s => new ClickUpList(s, ClickUp)).ToImmutableList();
+    }
+
+    public async Task<IList> CreateListAsync(string name)
+    {
+        throw new NotImplementedException();
     }
 
     public override async Task UpdateAsync()
     {
-        var request = new RestRequest($"folder/{Id}");
-        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.Folder>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+        var response = await ClickUp.RequestAsync<Models.Common.Folder>(
+            Method.Get, 
+            $"folder/{Id}");
         Update(response);
     }
     
     internal ClickUpFolder Update(Models.Common.Folder model)
     {
-        Name = model.Name;
+        Name = model.Name.Value;
         return this;
     }
 }

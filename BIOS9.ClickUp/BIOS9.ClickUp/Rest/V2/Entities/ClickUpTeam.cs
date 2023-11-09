@@ -11,49 +11,42 @@ public class ClickUpTeam : RestEntity, ITeam
 
     public ClickUpTeam(string id, ClickUpClient clickUp) : base(id, clickUp) { }
     
-    public ClickUpTeam(Models.Common.Team model, ClickUpClient clickUp) : base(model.Id, clickUp)
+    public ClickUpTeam(Models.Common.Team model, ClickUpClient clickUp) : base(model.Id.Value, clickUp)
     {
         Update(model);
     }
     
     public async Task<IReadOnlyCollection<ISpace>> GetSpacesAsync(bool archived = false)
     {
-        var request = new RestRequest($"team/{Id}/space");
-        request.AddParameter("archived", archived);
-        var response = await ClickUp.GetRestClient().GetAsync<GetSpacesResponse>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+        var response = await ClickUp.RequestAsync<GetSpacesResponse>(
+            Method.Get, 
+            $"team/{Id}/space", new []
+            {
+                new QueryParameter("archived", archived.ToString())
+            });
         return response.Spaces.Select(s => new ClickUpSpace(s, ClickUp)).ToImmutableList();
     }
 
     public async Task<ISpace> CreateSpaceAsync(string name)
     {
-        var request = new RestRequest($"team/{Id}/space");
-        request.AddJsonBody(new CreateSpaceRequest(name));
-        var response = await ClickUp.GetRestClient().PostAsync<Models.Common.Space>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+        var response = await ClickUp.RequestAsync<Models.Common.Space>(
+            Method.Post, 
+            $"team/{Id}/space",
+            payload: new CreateSpaceRequest(name));
         return new ClickUpSpace(response, ClickUp);
     }
 
     public override async Task UpdateAsync()
     {
-        var request = new RestRequest($"team/{Id}");
-        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.Team>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+        var response = await ClickUp.RequestAsync<Models.Common.Team>(
+            Method.Get, 
+            $"team/{Id}");
         Update(response);
     }
     
     internal ClickUpTeam Update(Models.Common.Team model)
     {
-        Name = model.Name;
+        Name = model.Name.Value;
         return this;
     }
 }

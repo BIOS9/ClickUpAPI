@@ -1,4 +1,5 @@
 ﻿using BIOS9.ClickUp.Core.Entities;
+using BIOS9.ClickUp.Core.Util;
 using RestSharp;
 
 namespace BIOS9.ClickUp.Rest.V2.Entities;
@@ -12,19 +13,16 @@ public class ClickUpTask : RestEntity, ITask
     {
     }
     
-    public ClickUpTask(Models.Common.Task model, ClickUpClient clickUp) : base(model.Id, clickUp)
+    public ClickUpTask(Models.Common.Task model, ClickUpClient clickUp) : base(model.Id.Value, clickUp)
     {
         Update(model);
     }
     
     public async Task DeleteAsync()
     {
-        var request = new RestRequest($"task/{Id}");
-        var response = await ClickUp.GetRestClient().DeleteAsync(request);
-        if (!response.IsSuccessful)
-        {
-            throw new Exception("Failed to delete task");
-        }
+        await ClickUp.RequestAsync(
+            Method.Delete, 
+            $"task/{Id}");
     }
 
     public async Task ModifyAsync(Action<TaskProperties> propertiesFunc)
@@ -32,34 +30,28 @@ public class ClickUpTask : RestEntity, ITask
         var properties = new TaskProperties();
         propertiesFunc(properties);
         var body = new Models.Common.Task(
-            Id,
-            properties.Description.OrElse(Description),
-            properties.Name.OrElse(Name));
-        var request = new RestRequest($"task/{Id}");
-        request.AddJsonBody(body);
-        var response = await ClickUp.GetRestClient().PutAsync<Models.Common.Task>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+            Optional<string>.Unspecified, 
+            properties.Name,
+            properties.Description);
+        var response = await ClickUp.RequestAsync<Models.Common.Task>(
+            Method.Put, 
+            $"task/{Id}",
+            payload: body);
         Update(response);
     }
     
     public override async Task UpdateAsync()
     {
-        var request = new RestRequest($"task/{Id}");
-        var response = await ClickUp.GetRestClient().GetAsync<Models.Common.Task>(request);
-        if (response == null)
-        {
-            throw new NullReferenceException("Invalid response from server");
-        }
+        var response = await ClickUp.RequestAsync<Models.Common.Task>(
+            Method.Get, 
+            $"task/{Id}");
         Update(response);
     }
     
     internal ClickUpTask Update(Models.Common.Task model)
     {
-        Name = model.Name;
-        Description = model.Description;
+        Name = model.Name.Value;
+        Description = model.Description.Value;
         return this;
     }
 }
