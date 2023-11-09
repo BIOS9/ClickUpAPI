@@ -40,8 +40,16 @@ jobs:
     needs: build
     if: github.event_name == 'release' && github.event.action == 'created'
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3.2.0
+      with:
+        dotnet-version: '7.0.x'
+    
     - name: Create NuGet package
-      run: dotnet pack --configuration Release --no-restore --output out
+      run: dotnet pack --configuration Release --output out
       working-directory: ./BIOS9.ClickUp
 
     - name: Dump GitHub context
@@ -52,7 +60,7 @@ jobs:
       working-directory: ./BIOS9.ClickUp
     
     - name: Push NuGet package
-      run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
+      run: dotnet nuget push out/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
       working-directory: ./BIOS9.ClickUp
 
   
