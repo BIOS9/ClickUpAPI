@@ -4,6 +4,12 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Authors>BIOS9</Authors>
+        <PackageProjectUrl>https://github.com/BIOS9/ClickUpAPI</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/BIOS9/ClickUpAPI/blob/main/LICENSE.md</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/BIOS9/ClickUpAPI</RepositoryUrl>
+        <Description>An unofficial .NET wrapper for the ClickUp V2 API. </Description>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
