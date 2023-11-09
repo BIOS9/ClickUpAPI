@@ -7,5 +7,5 @@ public interface IFolder : IEntity
     Task DeleteAsync();
     Task ModifyAsync(Action<FolderProperties> propertiesFunc);
     Task<IReadOnlyCollection<IList>> GetListsAsync(bool archived = false);
-    Task<IList> CreateListAsync(string name);
+    Task<IList> CreateListAsync(Action<ListProperties> propertiesFunc);
 }

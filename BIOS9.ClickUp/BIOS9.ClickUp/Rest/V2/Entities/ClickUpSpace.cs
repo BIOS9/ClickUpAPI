@@ -49,7 +49,7 @@ public class ClickUpSpace : RestEntity, ISpace
         return response.Folders.Select(f => new ClickUpFolder(f, ClickUp)).ToImmutableList();
     }
 
-    public async Task<IFolder> CreateFolderAsync(string name)
+    public async Task<IFolder> CreateFolderAsync(Action<FolderProperties> propertiesFunc)
     {
         throw new NotImplementedException();
     }
@@ -65,7 +65,7 @@ public class ClickUpSpace : RestEntity, ISpace
         return response.Lists.Select(s => new ClickUpList(s, ClickUp)).ToImmutableList();
     }
 
-    public async Task<IList> CreateListAsync(string name)
+    public async Task<IList> CreateListAsync(Action<ListProperties> propertiesFunc)
     {
         throw new NotImplementedException();
     }

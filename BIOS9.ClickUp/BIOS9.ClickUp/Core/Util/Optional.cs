@@ -29,6 +29,16 @@ public struct Optional<T>
         return IsSpecified ? _value : elseValue;
     }
     
+    public T OrElse(Func<T> elseValue)
+    {
+        return IsSpecified ? _value : elseValue();
+    }
+    
+    public T OrThrow(Exception ex)
+    {
+        return IsSpecified ? _value : throw ex;
+    }
+    
     /// <summary> Creates a new Parameter with the provided value. </summary>
     public Optional(T value)
     {

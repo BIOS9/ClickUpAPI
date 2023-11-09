@@ -7,8 +7,8 @@ public interface ISpace : IEntity
     Task DeleteAsync();
     Task ModifyAsync(Action<SpaceProperties> propertiesFunc);
     Task<IReadOnlyCollection<IFolder>> GetFoldersAsync(bool archived = false);
-    Task<IFolder> CreateFolderAsync(string name);
+    Task<IFolder> CreateFolderAsync(Action<FolderProperties> propertiesFunc);
     Task<IReadOnlyCollection<IList>> GetListsAsync(bool archived = false);
-    Task<IList> CreateListAsync(string name);
+    Task<IList> CreateListAsync(Action<ListProperties> propertiesFunc);
     
 }

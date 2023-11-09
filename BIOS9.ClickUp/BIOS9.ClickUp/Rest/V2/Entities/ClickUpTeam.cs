@@ -27,12 +27,15 @@ public class ClickUpTeam : RestEntity, ITeam
         return response.Spaces.Select(s => new ClickUpSpace(s, ClickUp)).ToImmutableList();
     }
 
-    public async Task<ISpace> CreateSpaceAsync(string name)
+    public async Task<ISpace> CreateSpaceAsync(Action<SpaceProperties> propertiesFunc)
     {
+        var properties = new SpaceProperties();
+        propertiesFunc(properties);
         var response = await ClickUp.RequestAsync<Models.Common.Space>(
             Method.Post, 
             $"team/{Id}/space",
-            payload: new CreateSpaceRequest(name));
+            payload: new CreateSpaceRequest(properties.Name.OrThrow(
+                new ArgumentException($"{nameof(properties.Name)} must be specified"))));
         return new ClickUpSpace(response, ClickUp);
     }
 

@@ -49,7 +49,7 @@ public class ClickUpFolder : RestEntity, IFolder
         return response.Lists.Select(s => new ClickUpList(s, ClickUp)).ToImmutableList();
     }
 
-    public async Task<IList> CreateListAsync(string name)
+    public async Task<IList> CreateListAsync(Action<ListProperties> propertiesFunc)
     {
         throw new NotImplementedException();
     }
