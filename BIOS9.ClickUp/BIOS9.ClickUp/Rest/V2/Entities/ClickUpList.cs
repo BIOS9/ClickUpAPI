@@ -59,7 +59,7 @@ public class ClickUpList : RestEntity, IList
         propertiesFunc(properties);
         var body = new Models.Common.Task(
             Optional<string>.Unspecified, 
-            properties.Name,
+            properties.Name.OrThrow(new ArgumentException($"{nameof(properties.Name)} must be specified")),
             properties.Description);
         var response = await ClickUp.RequestAsync<Models.Common.Task>(
             Method.Post, 

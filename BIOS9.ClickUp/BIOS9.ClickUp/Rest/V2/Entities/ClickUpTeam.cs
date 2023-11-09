@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using BIOS9.ClickUp.Core.Entities;
+using BIOS9.ClickUp.Core.Util;
 using BIOS9.ClickUp.Rest.V2.Models;
 using RestSharp;
 
@@ -34,8 +35,9 @@ public class ClickUpTeam : RestEntity, ITeam
         var response = await ClickUp.RequestAsync<Models.Common.Space>(
             Method.Post, 
             $"team/{Id}/space",
-            payload: new CreateSpaceRequest(properties.Name.OrThrow(
-                new ArgumentException($"{nameof(properties.Name)} must be specified"))));
+            payload: new Models.Common.Space(
+                Optional<string>.Unspecified,
+                properties.Name.OrThrow(new ArgumentException($"{nameof(properties.Name)} must be specified"))));
         return new ClickUpSpace(response, ClickUp);
     }
 

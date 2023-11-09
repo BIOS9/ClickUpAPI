@@ -51,7 +51,15 @@ public class ClickUpFolder : RestEntity, IFolder
 
     public async Task<IList> CreateListAsync(Action<ListProperties> propertiesFunc)
     {
-        throw new NotImplementedException();
+        var properties = new ListProperties();
+        propertiesFunc(properties);
+        var response = await ClickUp.RequestAsync<Models.Common.List>(
+            Method.Post, 
+            $"folder/{Id}/list",
+            payload: new Models.Common.Folder(
+                Optional<string>.Unspecified,
+                properties.Name.OrThrow(new ArgumentException($"{nameof(properties.Name)} must be specified"))));
+        return new ClickUpList(response, ClickUp);
     }
 
     public override async Task UpdateAsync()
