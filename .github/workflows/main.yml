@@ -55,4 +55,4 @@ jobs:
       run: dotnet pack ./BIOS9.ClickUp/BIOS9.ClickUp --configuration Release -p:Version=$BUILD_VERSION --output out
     
     - name: Push NuGet package
-      run: dotnet nuget push ./BIOS9.ClickUp/BIOS9.ClickUp/out/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
+      run: dotnet nuget push ./out/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
