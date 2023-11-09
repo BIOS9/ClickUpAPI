@@ -9,6 +9,8 @@ namespace BIOS9.ClickUp.Rest.V2.Entities;
 public class ClickUpTeam : RestEntity, ITeam
 {
     public string Name { get; private set; }
+    public string Color { get; private set; }
+    public string Avatar { get; private set; }
 
     public ClickUpTeam(string id, ClickUpClient clickUp) : base(id, clickUp) { }
     
@@ -52,6 +54,8 @@ public class ClickUpTeam : RestEntity, ITeam
     internal ClickUpTeam Update(Models.Common.Team model)
     {
         Name = model.Name.Value;
+        Color = model.Color.Value;
+        Avatar = model.Avatar.Value;
         return this;
     }
 }

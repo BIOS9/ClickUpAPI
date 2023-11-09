@@ -5,5 +5,7 @@ namespace BIOS9.ClickUp.Rest.V2.Models.Common;
 
 public record Team(
     [property: JsonProperty("id")] Optional<string> Id,
-    [property: JsonProperty("name")] Optional<string> Name
+    [property: JsonProperty("name")] Optional<string> Name,
+    [property: JsonProperty("color")] Optional<string> Color,
+    [property: JsonProperty("avatar")] Optional<string> Avatar
 );
