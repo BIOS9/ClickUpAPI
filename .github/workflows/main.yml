@@ -17,9 +17,6 @@ jobs:
       uses: actions/setup-dotnet@v3.2.0
       with:
         dotnet-version: '7.0.x'
-
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.2.0
     
     - name: Install dependencies
       run: dotnet restore
@@ -31,7 +28,7 @@ jobs:
          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
       
     - name: Build
-      run: dotnet build --configuration Release -p:Version=$BUILD_VERSION --no-restore
+      run: dotnet build --configuration Release --no-restore
       working-directory: ./BIOS9.ClickUp
       
     - name: Execute unit tests
@@ -40,12 +37,22 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
+    needs: build
     if: github.event_name == 'release' && github.event.action == 'created'
     steps:
     - name: Create NuGet package
       run: dotnet pack --configuration Release --no-restore --output out
+      working-directory: ./BIOS9.ClickUp
+
+    - name: Dump GitHub context
+      run: |
+         ls
+         pwd
+         ls out
+      working-directory: ./BIOS9.ClickUp
     
     - name: Push NuGet package
       run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
+      working-directory: ./BIOS9.ClickUp
 
   
