@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3.4.2
@@ -36,7 +36,7 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'created'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Get Build Version
       run: |
