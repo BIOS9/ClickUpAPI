@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3.4.2
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '10.0.x'
     
     - name: Install dependencies
       run: dotnet restore
@@ -49,7 +49,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3.4.2
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '10.0.x'
     
     - name: Create NuGet package
       run: dotnet pack ./BIOS9.ClickUp/BIOS9.ClickUp --configuration Release -p:Version=$BUILD_VERSION --output out
